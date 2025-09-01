@@ -3,17 +3,18 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const userRouters = require("./routes/user.route")
 
 dotenv.config();
-
 const app = express();
+app.use(express.json())
+const userRouters = require("./routes/user.route")
+
+
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/user", userRouters)
-
 
 
 // Public route
@@ -30,5 +31,5 @@ mongoose.connect(process.env.MONGO_URI, {
     .catch(err => console.error(err));
 
 // Start server
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

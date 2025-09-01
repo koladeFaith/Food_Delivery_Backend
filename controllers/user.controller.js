@@ -69,7 +69,7 @@ exports.signin = async (request, response) => {
     const token = jwt.sign(
         { id: user.id, email: user.email, fullName: user.fullName },
         process.env.JWT_SECRET,
-        { expiresIn: "5m" }
+        { expiresIn: "30m" }
     );
     response.status(200).json({
         message: "Login successful",
