@@ -1,7 +1,7 @@
 const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
-const nodemailer = require("nodemailer")
+// const nodemailer = require("nodemailer")
 const jwt = require('jsonwebtoken')
 exports.signup = async (request, response) => {
     try {
@@ -20,30 +20,30 @@ exports.signup = async (request, response) => {
             return response.status(400).json({ message: "Email is required" });
         }
 
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        });
+        // const transporter = nodemailer.createTransport({
+        //     service: "gmail",
+        //     auth: {
+        //         user: process.env.EMAIL_USER,
+        //         pass: process.env.EMAIL_PASSWORD,
+        //     },
+        // });
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "Welcome to NutriPlan",
-            html: "<p>Welcome to NutriPlan 🎉</p>",
-        };
+        // const mailOptions = {
+        //     from: process.env.EMAIL_USER,
+        //     to: email,
+        //     subject: "Welcome to NutriPlan",
+        //     html: "<p>Welcome to NutriPlan 🎉</p>",
+        // };
 
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error("Email error:", error);
-                // Just log it, don’t break signup
-            } else {
-                console.log("Email sent:", info.response);
-            }
-        });
+        // transporter.sendMail(mailOptions, (error, info) => {
+        //     if (error) {
+        //         console.error("Email error:", error);
+        //         // Just log it, don’t break signup
+        //     } else {
+        //         console.log("Email sent:", info.response);
+        //     }
+        // });
 
 
         return response.status(200).json({
