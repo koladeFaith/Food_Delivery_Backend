@@ -12,9 +12,9 @@ app.use("/uploads", express.static("uploads"));
 
 const userRouters = require("./routes/user.route");
 app.use("/user", userRouters);
-const uploadRoutes = require("./routes/uploadRoutes")
+// const uploadRoutes = require("./routes/uploadRoutes")
 // app.use("/api/admin", uploadRoutes);
-// const productRoutes = require("./routes/productRoutes");
+const productRoutes = require("./routes/productRoutes");
 app.use("/api", productRoutes);
 // Public route
 app.get('/', (req, res) => {
