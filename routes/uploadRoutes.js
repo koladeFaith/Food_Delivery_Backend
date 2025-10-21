@@ -1,7 +1,7 @@
-import express from "express";
-import multer from "multer";
-import path from "path";
-import Product from "../models/Product.js";
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+const Product = require("../models/Product");
 
 const router = express.Router();
 
@@ -30,4 +30,4 @@ router.post("/add-product", upload.single("image"), async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;
