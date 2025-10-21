@@ -13,7 +13,7 @@ app.use("/uploads", express.static("uploads"));
 
 const userRouters = require("./routes/user.route");
 app.use("/user", userRouters);
-const uploadRoutes = require("./routes/uploadRoutes.js")
+const uploadRoutes = require("./routes/uploadRoutes")
 app.use("/api/admin", uploadRoutes);
 
 // Public route

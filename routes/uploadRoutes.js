@@ -12,6 +12,7 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + path.extname(file.originalname));
     },
 });
+
 const upload = multer({ storage });
 
 // POST route: upload image + product data
@@ -20,13 +21,18 @@ router.post("/add-product", upload.single("image"), async (req, res) => {
         const { name, price, description } = req.body;
         const image = `/uploads/${req.file.filename}`;
 
-        const product = new Product({ name, price, description, image });
-        await product.save();
+        const product = new Product({
+            name,
+            price,
+            description,
+            image,
+        });
 
+        await product.save();
         res.json({ message: "✅ Product added successfully", product });
     } catch (error) {
         console.error("Error adding product:", error.message);
-        res.status(500).json({ message: "❌ Server error" });
+        res.status(500).json({ message: "❌ Server error", error: error.message });
     }
 });
 
