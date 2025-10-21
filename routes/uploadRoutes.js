@@ -25,7 +25,7 @@ router.post("/add-product", upload.single("image"), async (req, res) => {
 
         res.json({ message: "✅ Product added successfully", product });
     } catch (error) {
-        console.error(error);
+        console.error("Error adding product:", error.message);
         res.status(500).json({ message: "❌ Server error" });
     }
 });
