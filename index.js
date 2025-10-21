@@ -8,10 +8,13 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 const userRouters = require("./routes/user.route");
 app.use("/user", userRouters);
+const uploadRoutes = require("./routes/uploadRoutes.js")
+app.use("/api/admin", uploadRoutes);
 
 // Public route
 app.get('/', (req, res) => {
