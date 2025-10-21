@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-
 dotenv.config();
 const app = express();
 
@@ -15,7 +14,8 @@ const userRouters = require("./routes/user.route");
 app.use("/user", userRouters);
 const uploadRoutes = require("./routes/uploadRoutes")
 app.use("/api/admin", uploadRoutes);
-
+const productRoutes = require("./routes/productRoutes");
+app.use("/api", productRoutes);
 // Public route
 app.get('/', (req, res) => {
     res.send('Hello from Express with Mongo, JWT, CORS, etc!');
