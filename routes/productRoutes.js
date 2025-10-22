@@ -20,12 +20,13 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
     try {
         const { name, price, description } = req.body;
 
-        if (!req.file)
+        if (!req.file) {
             return res
                 .status(400)
                 .json({ message: "No file uploaded. Field name must be 'image'." });
+        }
 
-        // ✅ Use full URL instead of relative path
+        // ✅ Use full image URL
         const image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
         const product = new Product({ name, price, description, image });
@@ -42,16 +43,20 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
 router.get("/products", async (req, res) => {
     try {
         const products = await Product.find();
+
         const formatted = products.map((product) => ({
             ...product._doc,
-            image: `${req.protocol}://${req.get("host")}/uploads/${product.image}`,
+            image: product.image.startsWith("http")
+                ? product.image
+                : `${req.protocol}://${req.get("host")}${product.image}`,
         }));
+
         res.json(formatted);
     } catch (error) {
+        console.error("Error fetching products:", error.message);
         res.status(500).json({ message: "Failed to fetch products" });
     }
 });
-
 
 /* ---------------- EDIT PRODUCT ---------------- */
 router.put("/products/:id", upload.single("image"), async (req, res) => {
@@ -62,12 +67,14 @@ router.put("/products/:id", upload.single("image"), async (req, res) => {
         const product = await Product.findById(id);
         if (!product) return res.status(404).json({ message: "Product not found" });
 
-        // If new image uploaded, replace old one
+        // Handle image replacement
         if (req.file) {
-            if (product.image && fs.existsSync("." + product.image)) {
-                fs.unlinkSync("." + product.image);
+            // Delete old file if exists (only if stored locally)
+            if (product.image && !product.image.startsWith("http")) {
+                const oldPath = path.join(__dirname, "..", product.image);
+                if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
             }
-            product.image = `/uploads/${req.file.filename}`;
+            product.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
         }
 
         product.name = name || product.name;
@@ -88,12 +95,12 @@ router.delete("/products/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const product = await Product.findById(id);
-
         if (!product) return res.status(404).json({ message: "Product not found" });
 
-        // Delete image from filesystem if exists
-        if (product.image && fs.existsSync("." + product.image)) {
-            fs.unlinkSync("." + product.image);
+        // Delete file if exists (only local)
+        if (product.image && !product.image.startsWith("http")) {
+            const oldPath = path.join(__dirname, "..", product.image);
+            if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
         }
 
         await Product.findByIdAndDelete(id);
