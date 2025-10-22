@@ -18,18 +18,23 @@ const upload = multer({ storage });
 /* ---------------- ADD PRODUCT ---------------- */
 router.post("/admin/add-product", upload.single("image"), async (req, res) => {
     try {
-        const { name, price, description } = req.body;
+        const { name, price, description, category } = req.body; // ✅ added category
 
-        if (!req.file) {
+        if (!req.file)
             return res
                 .status(400)
                 .json({ message: "No file uploaded. Field name must be 'image'." });
-        }
 
-        // ✅ Use full image URL
         const image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
-        const product = new Product({ name, price, description, image });
+        const product = new Product({
+            name,
+            price,
+            description,
+            image,
+            category: category || "main", // ✅ fallback to main
+        });
+
         await product.save();
 
         res.json({ message: "✅ Product added successfully", product });
@@ -38,6 +43,7 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
 
 /* ---------------- FETCH ALL PRODUCTS ---------------- */
 router.get("/products", async (req, res) => {
