@@ -18,7 +18,7 @@ const upload = multer({ storage });
 /* ---------------- ADD PRODUCT ---------------- */
 router.post("/admin/add-product", upload.single("image"), async (req, res) => {
     try {
-        const { name, price, description, category } = req.body; // ✅ added category
+        const { name, price, description, category } = req.body; //  added category
 
         if (!req.file)
             return res
@@ -32,7 +32,7 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
             price,
             description,
             image,
-            category: category || "main", // ✅ fallback to main
+            category: category || "main", //  fallback to main
         });
 
         await product.save();
@@ -68,7 +68,7 @@ router.get("/products", async (req, res) => {
 router.put("/products/:id", upload.single("image"), async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, description } = req.body;
+        const { name, price, description, category } = req.body; // ✅ include category
 
         const product = await Product.findById(id);
         if (!product) return res.status(404).json({ message: "Product not found" });
@@ -86,6 +86,7 @@ router.put("/products/:id", upload.single("image"), async (req, res) => {
         product.name = name || product.name;
         product.price = price || product.price;
         product.description = description || product.description;
+        product.category = category || product.category; //  Added line
 
         await product.save();
 
