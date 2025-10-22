@@ -37,7 +37,7 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
 
         await product.save();
 
-        res.json({ message: "✅ Product added successfully", product });
+        res.json({ message: " Product added successfully", product });
     } catch (error) {
         console.error("Error adding product:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
@@ -68,7 +68,7 @@ router.get("/products", async (req, res) => {
 router.put("/products/:id", upload.single("image"), async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, description, category } = req.body; // ✅ include category
+        const { name, price, description, category } = req.body; //  include category
 
         const product = await Product.findById(id);
         if (!product) return res.status(404).json({ message: "Product not found" });
@@ -90,7 +90,7 @@ router.put("/products/:id", upload.single("image"), async (req, res) => {
 
         await product.save();
 
-        res.json({ message: "✅ Product updated successfully", product });
+        res.json({ message: "Product updated successfully", product });
     } catch (error) {
         console.error("Error updating product:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
