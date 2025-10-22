@@ -39,13 +39,17 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
 /* ---------------- FETCH ALL PRODUCTS ---------------- */
 router.get("/products", async (req, res) => {
     try {
-        const products = await Product.find().sort({ createdAt: -1 });
-        res.json(products);
+        const products = await Product.find();
+        const formatted = products.map((product) => ({
+            ...product._doc,
+            image: `${req.protocol}://${req.get("host")}/uploads/${product.image}`,
+        }));
+        res.json(formatted);
     } catch (error) {
-        console.error("Fetch error:", error.message);
         res.status(500).json({ message: "Failed to fetch products" });
     }
 });
+
 
 /* ---------------- EDIT PRODUCT ---------------- */
 router.put("/products/:id", upload.single("image"), async (req, res) => {

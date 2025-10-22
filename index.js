@@ -4,11 +4,15 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 dotenv.config();
 const app = express();
+const path = require('path');
 
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
 const userRouters = require("./routes/user.route");
 app.use("/user", userRouters);
