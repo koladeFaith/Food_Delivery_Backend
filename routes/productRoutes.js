@@ -25,7 +25,9 @@ router.post("/admin/add-product", upload.single("image"), async (req, res) => {
                 .status(400)
                 .json({ message: "No file uploaded. Field name must be 'image'." });
 
-        const image = `/uploads/${req.file.filename}`;
+        // ✅ Use full URL instead of relative path
+        const image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
         const product = new Product({ name, price, description, image });
         await product.save();
 
